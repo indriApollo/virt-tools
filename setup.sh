@@ -99,10 +99,11 @@ if [[ $userinput == y ]]; then
     echo "Bridge interfaces"
     echo "-----------------"
     brctl show 2>&1
+    echo
     echo "Storage"
     echo "-------"
     ls /var/lib/libvirt/images/ 2>&1
-
+    echo
     while [[ $userok != y ]]; do
         read -p "vm name: " vmname
         read -p "vcpus count: " vcpus
@@ -115,7 +116,7 @@ if [[ $userinput == y ]]; then
         read -p "Proceed with install ? [y/n] " userok
     done
 
-    if [[ $distroUrl ==  ""]]; then
+    if [[ $distroUrl == "" ]]; then
         distroUrl="http://releases.ubuntu.com/16.04.2/ubuntu-16.04.2-server-amd64.iso"
         checksumUrl="http://releases.ubuntu.com/16.04.2/SHA256SUMS"
     fi
@@ -153,9 +154,9 @@ if [[ $userinput == y ]]; then
     echo "to reload the vm configuration"
     echo
 
-    if !(virt-install --name $vmname --memory $memory --vcpus $vcpus\ 
-    --disk "path=/var/lib/libvirt/images/"$storageName",bus=virtio" \ 
-    --network bridge=$bridgeName --cdrom=/var/lib/libvirt/boot/${distroUrl##*/} \ 
+    if !(virt-install --name $vmname --memory $memory --vcpus $vcpus \
+    --disk "path=/var/lib/libvirt/images/"$storageName",bus=virtio" \
+    --network bridge=$bridgeInterface --cdrom=/var/lib/libvirt/boot/${distroUrl##*/} \
     --graphics vnc,listen=0.0.0.0,port=$vncport) 2>&1 ; then
         echo "VM install failed. Please check the install parameters"
         exit 1
